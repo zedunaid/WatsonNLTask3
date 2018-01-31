@@ -20,7 +20,11 @@ export default class OutputScreen extends React.Component {
     console.log(error.response)
 });
   }
- 
+
+  renderCategory()
+  {
+    return this.state.watdata.map((data) => (<Text>{data.categories[0].label}</Text>));
+  }
  
   render() {
     console.log(this.state);
@@ -28,7 +32,8 @@ export default class OutputScreen extends React.Component {
     return (
       <View>
          <Text>Your Category: </Text>
-        <Text>Name: </Text>
+        <Text>Name                                    Score</Text>
+        <Text>{this.renderCategory()}</Text>
       </View>
     );
   }
