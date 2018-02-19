@@ -1,15 +1,35 @@
 import React from 'react';
-import { StyleSheet, Text, View,TextInput } from 'react-native';
+import { StyleSheet, Text, View,TextInput,TouchableOpacity,Alert } from 'react-native';
 import axios from 'axios';
+
 /** Parent to child communication, we use prop. State- component internal record keeping (Update some amount
  *  of data over time) */
 export default class OutputScreen extends React.Component {
   constructor(props) {
     super(props);
     this.renderCategory = this.renderCategory.bind(this);
-    this.state={watdata:[]};
+    this.state={watdata:[],auth_token:''};
 }
-
+static navigationOptions = {
+  title: 'Result',
+};
+Logout = async () => {
+  fetch('https://auth.accumulate65.hasura-app.io/v1/user/logout', {
+        method: 'post',
+       
+      }).then((response) => response.json())
+      .then((res) => {
+    if(typeof(res.message) != "undefined"){
+      this.setState({ auth_token:'out' });
+     Alert.alert("Success: ", "You have successfully logged out");
+    }
+    else{  Alert.alert("Error", "Error: "+res.message);
+       //navigation.navigate('Welcome')
+        }
+   }).catch((error) => {
+       console.error(error);
+      });
+}
   componentWillMount()
   {
     const {state} = this.props.navigation;
@@ -20,38 +40,81 @@ export default class OutputScreen extends React.Component {
     type:state.params.inp,
     input:state.params.statement
    })
- .then(response =>this.setState({watdata:Object.values(response.data)})) 
+ .then(response =>this.setState({watdata:Object.values(response.data)[0]})) 
+ 
  .catch(error => {
   console.log(error.response)
 });
 
   }
-  renderCategory()
-  {
-  /* return this.state.watdata.map((data) => data.categories.map((category)=>(<Text>{category[1].label}</Text>)));*/
-   /*return this.state.watdata.map((data)=>data.Object.categories.map((category)=>(<Text>{category[1].label}</Text>)));*/
-   
-   return this.state.watdata.map((data)=>(<View style={{marginLeft:5}}>
-   <Text>{String(data[0].label).substring(String(data[0].label).lastIndexOf("/") + 1, String(data[0].label).length)}                                {parseFloat(String(data[0].score)).toFixed(4)*100} %</Text>
-   <Text>{String(data[1].label).substring(String(data[1].label).lastIndexOf("/") + 1, String(data[1].label).length)}                                {parseFloat(String(data[1].score)).toFixed(4)*100} %</Text>
-   <Text>{String(data[2].label).substring(String(data[2].label).lastIndexOf("/") + 1, String(data[2].label).length)}                                {parseFloat(String(data[2].score)).toFixed(4)*100} %</Text>
-   </View>));
-      
+  renderCategory(){
   
-  }
+   if(this.state.watdata.map((data)=>data.label) === undefined) {return <Text></Text>;}
+   return this.state.watdata.map((data)=>(<View style={{marginLeft:8,borderRadius: 3,
+    borderColor:'#6681BE',
+    borderWidth:1,alignItems: 'center',marginRight:8}} key={data.label}>
+    <Text>{String(data.label).substring(String(data.label).lastIndexOf("/") + 1, String(data.label).length)}
+             -->       
+    {parseFloat(String(data.score)).toFixed(4)*100} %</Text>
+   </View>));
+              }
  
- 
-  render() {
+ render() {
     console.log(this.state);
     if(!this.state.watdata){
       return null;
   }
+  if(this.state.auth_token=='')
+  {
     return (
-      <View>
-         <Text style={{fontWeight:"bold",marginLeft:5}}>Your Results: </Text>
-        <Text style={{fontWeight:"bold",marginLeft:5}}>Category Name                Confidence</Text>
-        <View>{this.renderCategory()}</View>
+      <View style={
+        {
+            marginBottom: 7,
+            backgroundColor:'#95B9C7',
+            borderRadius: 3 ,
+            marginTop:7,
+            borderColor:'#95B9C7',
+            borderWidth:1.7,marginLeft:10,marginRight:5,
+        }
+      }>
+         <Text style={{fontWeight:"bold",margin:10,fontSize:15}}>Your Results: </Text>
+        <Text style={{fontWeight:"bold",marginTop:8,marginLeft:8,borderRadius: 3,
+    borderColor:'#6681BE',
+    borderWidth:1,alignItems: 'center',textAlign:'center',marginRight:8}}>Category               Confidence</Text>
+        <View style={{marginBottom:25}}>{this.renderCategory()}</View>
+        <TouchableOpacity  onPress={this.Logout.bind(this)}
+              >
+        <View style={{height: 37,width:90, backgroundColor:
+        'blue',justifyContent: 'center',padding:5,marginLeft:7,marginRight:8,borderRadius:10,
+        alignItems: 'center',marginBottom:25}}>
+          <Text style={{
+          fontSize: 17,
+          color: '#FFFFFF',
+          }}> 
+          LOGOUT</Text>
+        </View>
+        </TouchableOpacity>
       </View>
     );
   }
+  else{
+    return(
+      <View style={{marginTop:20}}>
+        <Text style={{fontWeight:"bold",padding:10,fontSize:17,alignItems:'center'}} >You are Logged Out </Text>
+        <TouchableOpacity  onPress={()=>navigate('Login')}
+            >
+      <View style={{height: 37, backgroundColor:
+      'blue',justifyContent: 'center',padding:5,marginLeft:7,marginRight:8,
+      alignItems: 'center',marginBottom:25,marginTop:10}}>
+        <Text style={{
+        fontSize: 17,
+        color: '#FFFFFF',
+        }}> 
+        CLICK HERE TO LOGIN</Text>
+      </View>
+      </TouchableOpacity>
+      </View>
+    );
+  }
+}
 }
