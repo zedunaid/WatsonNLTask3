@@ -132,7 +132,7 @@ Signup = async () => {
           fontSize: 20,
           color: '#FFFFFF',
           }}> 
-          Signup</Text>
+          SIGNUP</Text>
         </View>
         </TouchableOpacity>
         <TouchableOpacity style={{paddingTop:15}} onPress={this.Login.bind(this)}>
@@ -143,7 +143,7 @@ Signup = async () => {
           fontSize: 20,
           color: '#FFFFFF',
           }}> 
-          Login </Text>
+          LOGIN </Text>
         </View>
         </TouchableOpacity>
      </View>

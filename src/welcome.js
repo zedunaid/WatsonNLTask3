@@ -58,6 +58,18 @@ export default class HomeScreen extends React.Component {
               backgroundColor:'#95B9C7'
                  }
         }>
+          <TouchableOpacity  onPress={()=>this.props.navigation.goBack()}>
+        <View style={{height: 28,width:69, backgroundColor:
+        'blue',justifyContent: 'center',padding:5,marginLeft:7,marginRight:8,borderRadius:18,
+        alignItems: 'center',marginBottom:15,marginTop:7}}>
+          <Text style={{
+          fontSize: 13,
+          color: '#FFFFFF',
+          }}> 
+          BACK</Text>
+        </View>
+        </TouchableOpacity>
+        
           <Text style={{fontWeight:"bold",padding:10,fontSize:17,alignItems:'center'}}>
           Watson Natural Language Classifier</Text>
           <Text style={{marginLeft:5,marginTop:20}}>Find out category of your input</Text>
@@ -90,25 +102,13 @@ export default class HomeScreen extends React.Component {
           GO</Text>
         </View>
         </TouchableOpacity>
-        <TouchableOpacity  onPress={() =>this.props.navigation.goBack()}>
-        <View style={{height: 37, backgroundColor:'blue',
-        justifyContent: 'center',padding:5,marginLeft:7,marginRight:8,
+       
+         <TouchableOpacity  onPress={this.Logout.bind(this)}>
+        <View style={{height: 33,width:85, backgroundColor:
+        'blue',justifyContent: 'center',padding:5,marginLeft:7,marginRight:8,borderRadius:22,
         alignItems: 'center',marginBottom:25}}>
           <Text style={{
-          fontSize: 17,
-          color: '#FFFFFF',
-          }}> 
-          HOME</Text>
-        </View>
-        </TouchableOpacity>
-        
-
-        <TouchableOpacity  onPress={this.Logout.bind(this)}>
-        <View style={{height: 37,width:90, backgroundColor:
-        'blue',justifyContent: 'center',padding:5,marginLeft:7,marginRight:8,borderRadius:10,
-        alignItems: 'center',marginBottom:25}}>
-          <Text style={{
-          fontSize: 17,
+          fontSize: 15,
           color: '#FFFFFF',
           }}> 
           LOGOUT</Text>
@@ -119,6 +119,7 @@ export default class HomeScreen extends React.Component {
     }
     else
     {
+      
        return(
         <View style={{marginTop:20}}>
           <Text style={{fontWeight:"bold",padding:10,fontSize:17,alignItems:'center'}} >You are Logged Out </Text>
